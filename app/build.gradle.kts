@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
-    id("androidx.navigation.safeargs")
+    id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
 }
 
@@ -43,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation("com.android.car.ui:car-ui-lib:2.6.0")
     val room_version = "2.6.1"
 
     implementation("androidx.room:room-runtime:$room_version")
@@ -51,9 +52,15 @@ dependencies {
 
     // Corourtines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
 
     // Navigation
     val nav_version = "2.7.7"
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    // The Kotlin ones
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 

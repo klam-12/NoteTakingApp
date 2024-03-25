@@ -7,9 +7,13 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.android.car.ui.toolbar.MenuItem
 import com.example.notetakingapp.MainActivity
 import com.example.notetakingapp.R
 import com.example.notetakingapp.adapter.NoteAdapter
@@ -31,7 +35,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
     private lateinit var noteAdapter: NoteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+//        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -51,6 +55,36 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         binding.fabAddNote.setOnClickListener(){
             it.findNavController().navigate(R.id.action_homeFragment_to_newNoteFragment)
         }
+
+        // The usage of an interface lets you inject your own implementation
+        val menuHost: MenuHost = requireActivity()
+
+        // Add menu items without using the Fragment Menu APIs
+        // Note how we can tie the MenuProvider to the viewLifecycleOwner
+        // and an optional Lifecycle.State (here, RESUMED) to indicate when
+        // the menu should be visible
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.home_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
+                // Handle the menu selection
+                return when (menuItem.itemId) {
+                    R.id.menu_search -> {
+                        // Handle the menu selection
+                        // For example, enable the search view and set the listener for the search query
+                        // For example, if you have a search view with the ID `searchView`
+                        val searchView = menuItem.actionView as SearchView
+                        searchView.isSubmitButtonEnabled = false
+//                        searchView.setOnQueryTextListener(this)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
     private fun setUpRecyclerView() {
         noteAdapter = NoteAdapter()
@@ -85,15 +119,15 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.home_menu,menu)
-        val mMenuSearch = menu.findItem(R.id.menu_search).actionView as SearchView
-        mMenuSearch.isSubmitButtonEnabled = false
-        mMenuSearch.setOnQueryTextListener(this)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//
+//        menu.clear()
+//        inflater.inflate(R.menu.home_menu,menu)
+//        val mMenuSearch = menu.findItem(R.id.menu_search).actionView as SearchView
+//        mMenuSearch.isSubmitButtonEnabled = false
+//        mMenuSearch.setOnQueryTextListener(this)
+//    }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
 //        if (query != null) {
@@ -121,6 +155,29 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         super.onDestroy()
         _binding = null
     }
+
+//    override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
+//        val mMenuSearch = menuItem.actionView as SearchView
+//        mMenuSearch.isSubmitButtonEnabled = false
+//        mMenuSearch.setOnQueryTextListener(this)
+//        return true
+//    }
+
+//    override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
+//        // Handle the menu selection
+//        return when (menuItem.itemId) {
+//            R.id.menu_search -> {
+//                // Handle the menu selection
+//                // For example, enable the search view and set the listener for the search query
+//                // For example, if you have a search view with the ID `searchView`
+//                val searchView = menuItem.actionView as SearchView
+//                searchView.isSubmitButtonEnabled = false
+//                searchView.setOnQueryTextListener(this)
+//                true
+//            }
+//            else -> false
+//        }
+//    }
 
 
 }

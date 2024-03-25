@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notetakingapp.databinding.NoteLayoutBinding
 import com.example.notetakingapp.fragments.HomeFragmentDirections
-import com.example.notetakingapp.fragments.HomeFragmentDirections.ActionHomeFragmentToUpdateNoteFragment
 import com.example.notetakingapp.model.Note
 import java.util.Random
 
